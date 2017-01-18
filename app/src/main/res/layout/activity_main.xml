@@ -7,16 +7,17 @@
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingRight="@dimen/activity_vertical_margin"
+    android:paddingTop="16dp"
     tools:context="com.goperez.neuraudio.MainActivity"
     android:background="@drawable/background">
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/myFAB"
         android:layout_width="wrap_content"
+        android:scaleType="fitXY"
         android:layout_height="wrap_content"
-        android:src="@android:drawable/ic_media_play"
+        android:src="@drawable/ic_play_arrow_white_24dp"
         android:layout_centerInParent="true"
         app:fabSize="normal"
         app:elevation="4dp" />
