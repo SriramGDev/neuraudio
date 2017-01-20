@@ -19,6 +19,11 @@ android {
     }
 }
 
+repositories {
+    maven { url 'https://github.com/kshoji/JFugue-for-Android/raw/master/jfugue-android/snapshot' }
+    maven { url 'https://github.com/kshoji/USB-MIDI-Driver/raw/master/MIDIDriver/snapshots' }
+}
+
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -27,5 +32,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.1.0'
     compile 'com.android.support:design:25.1.0'
     testCompile 'junit:junit:4.12'
-    compile files('libs/jfugue-5.0.7.jar')
+    compile 'jp.kshoji:jfugue-android:4.0.3:@aar'
+    compile 'jp.kshoji:midi-driver:0.1.1:@aar'
+
 }
