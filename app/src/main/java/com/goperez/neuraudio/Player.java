@@ -48,7 +48,7 @@ public class Player {
             create_instrument_wav_file(instruments.get(i), temp);
         }
         //Merge All the temporary Wav files
-        merge_wave_files(temp_output_file_path,path_output);
+        merge_wave_files(temp_output_file_path, path_output);
 
         //Clear temporary files
         CacheManager.trimCache(context);
@@ -115,9 +115,7 @@ public class Player {
         return temp1 + "--"+ temp2;
     }
     private void concatenate_wave_files(String path_list, String output_path){
-        String cmd_notes_string = "-f concat -i "+path_list+" -y "+output_path;
-        String[] cmd_notes = new String[1];
-        cmd_notes[0] = cmd_notes_string;
+        String cmd_notes = "-f concat -i "+path_list+" -y "+output_path;
         ffmpegCmd(cmd_notes);
     }
 
@@ -127,14 +125,12 @@ public class Player {
         for(int i=0; i<files.length;i++){
             temp+="-i "+files[i]+" ";
         }
-        String cmd_merge_string = temp+" -filter_complex amix=inputs="+num_files+":duration=first:dropout_transition=3 -y "+output_path;
-        String[] cmd_merge = new String[1];
-        cmd_merge[0] = cmd_merge_string;
+        String cmd_merge = temp+" -filter_complex amix=inputs="+num_files+":duration=first:dropout_transition=3 -y "+output_path;
         ffmpegCmd(cmd_merge);
     }
 
 
-    private void ffmpegCmd(String[] cmd) {
+    private void ffmpegCmd(String cmd) {
         ffmpeg = FFmpeg.getInstance(context);
         try {
             // to execute "ffmpeg -version" command you just need to pass "-version"
@@ -142,6 +138,7 @@ public class Player {
 
                 @Override
                 public void onStart() {
+                    System.out.println("Started");
                 }
 
                 @Override
@@ -150,11 +147,12 @@ public class Player {
 
                 @Override
                 public void onFailure(String message) {
-
+                    System.out.println("Failure");
                 }
 
                 @Override
                 public void onSuccess(String message) {
+                    System.out.println("Success");
                 }
 
                 @Override
@@ -177,13 +175,19 @@ public class Player {
                 public void onStart() {}
 
                 @Override
-                public void onFailure() {}
+                public void onFailure() {
+                    System.out.println("Setup Failed");
+                }
 
                 @Override
-                public void onSuccess() {}
+                public void onSuccess() {
+                    System.out.println("Setup Successful");
+                }
 
                 @Override
-                public void onFinish() {}
+                public void onFinish() {
+                    System.out.println("Setup Finished");
+                }
             });
         } catch (FFmpegNotSupportedException e) {
             // Handle if FFmpeg is not supported by device

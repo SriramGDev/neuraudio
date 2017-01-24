@@ -34,6 +34,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'jp.kshoji:jfugue-android:4.0.3:@aar'
     compile 'jp.kshoji:midi-driver:0.1.1:@aar'
-    compile 'com.writingminds:FFmpegAndroid:0.3.2'
+    compile 'com.github.hiteshsondhi88.libffmpeg:FFmpegAndroid:0.2.5'
 
 }

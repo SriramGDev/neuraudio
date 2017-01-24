@@ -36,7 +36,15 @@ public class MainActivity extends AppCompatActivity {
             playButton.setImageResource(R.drawable.ic_pause_white_24dp);
             rawFilestoInternalStorage();
             produceAndCreateMusic();
-            playMusic();
+            while(!(new File("/storage/emulated/0/music/song.wav").exists())) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            //playMusic();
+            System.out.println(new File("/storage/emulated/0/music/song.wav").exists());
         }
     }
 
@@ -58,8 +66,9 @@ public class MainActivity extends AppCompatActivity {
         p.addInstrument(piano_right);
 
         System.out.println(getFilesDir().getAbsolutePath());
-        p.produceMusic(getFilesDir().getAbsolutePath() + "/song.wav");
-        File check = new File(getFilesDir().getAbsolutePath() + "/song.wav");
+        System.out.println(p.produceMusic("/storage/emulated/0/Music/song.wav"));
+        File check = new File("/storage/emulated/0/Music/song.wav");
+        System.out.println(new File(getFilesDir() + "/a5w.wav").exists());
         System.out.println(check.exists());
     }
 
