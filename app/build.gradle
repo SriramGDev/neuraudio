@@ -5,7 +5,7 @@ android {
     buildToolsVersion "25.0.0"
     defaultConfig {
         applicationId "com.goperez.neuraudio"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -34,5 +34,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'jp.kshoji:jfugue-android:4.0.3:@aar'
     compile 'jp.kshoji:midi-driver:0.1.1:@aar'
+    compile 'com.writingminds:FFmpegAndroid:0.3.2'
 
 }

@@ -1,9 +1,19 @@
 package com.goperez.neuraudio;
 
+import android.content.res.AssetManager;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 public class MainActivity extends AppCompatActivity {
     boolean isPlaying = false;
@@ -24,11 +34,44 @@ public class MainActivity extends AppCompatActivity {
         } else {
             isPlaying = true;
             playButton.setImageResource(R.drawable.ic_pause_white_24dp);
-            Uri path = Uri.parse("android.resource://com.goperez.neuraudio/raw/pianonotes/");
-            String pianoNotes = path.toString();
-            com.goperez.neuraudio.Instrument piano_right = new com.goperez.neuraudio.Instrument("piano_right");
-            piano_right.setPath_to_notes(pianoNotes);
-            piano_right.setBar("A5i C6i D6h rq A6i C6i G6i F6i E6i A5i D6i C6i A5i C6i D6h rq A6i C6i G6i F6i E6i A5i D6i C6i A5i C6i D6i A5i C6i D6i C6i A5i A6i C6i G6i F6i E6i A5i D6i C6i D5i F5i A5i F5i A5i D6i A5i D6i F6i D6i F6i D7w");
+            rawFilestoInternalStorage();
+            produceAndCreateMusic();
+            playMusic();
+        }
+    }
+
+    public void rawFilestoInternalStorage() {
+        try {
+            InputStream input = this.getResources().openRawResource(R.raw.a5w);
+            File outputFile = new File(getFilesDir(), "a5w.wav");
+            OutputStream os = new FileOutputStream(outputFile);
+        } catch(FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void produceAndCreateMusic() {
+        com.goperez.neuraudio.Instrument piano_right = new com.goperez.neuraudio.Instrument("piano_right");
+        piano_right.setPath_to_notes(getFilesDir().getAbsolutePath());
+        piano_right.setBar("a5w");
+        Player p = new Player(this.getApplicationContext());
+        p.addInstrument(piano_right);
+
+        System.out.println(getFilesDir().getAbsolutePath());
+        p.produceMusic(getFilesDir().getAbsolutePath() + "/song.wav");
+        File check = new File(getFilesDir().getAbsolutePath() + "/song.wav");
+        System.out.println(check.exists());
+    }
+
+    public void playMusic() {
+        try {
+            MediaPlayer player = new MediaPlayer();
+            player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            player.setDataSource(getFilesDir().getAbsolutePath() + "/song.wav");
+            player.prepare();
+            player.start();
+        } catch(IOException e) {
+            e.printStackTrace();
         }
     }
 }

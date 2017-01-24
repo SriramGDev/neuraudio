@@ -115,7 +115,9 @@ public class Player {
         return temp1 + "--"+ temp2;
     }
     private void concatenate_wave_files(String path_list, String output_path){
-        String cmd_notes = "-f concat -i "+path_list+" -y "+output_path;
+        String cmd_notes_string = "-f concat -i "+path_list+" -y "+output_path;
+        String[] cmd_notes = new String[1];
+        cmd_notes[0] = cmd_notes_string;
         ffmpegCmd(cmd_notes);
     }
 
@@ -125,12 +127,14 @@ public class Player {
         for(int i=0; i<files.length;i++){
             temp+="-i "+files[i]+" ";
         }
-        String cmd_merge= temp+" -filter_complex amix=inputs="+num_files+":duration=first:dropout_transition=3 -y "+output_path;
+        String cmd_merge_string = temp+" -filter_complex amix=inputs="+num_files+":duration=first:dropout_transition=3 -y "+output_path;
+        String[] cmd_merge = new String[1];
+        cmd_merge[0] = cmd_merge_string;
         ffmpegCmd(cmd_merge);
     }
 
 
-    private void ffmpegCmd(String cmd) {
+    private void ffmpegCmd(String[] cmd) {
         ffmpeg = FFmpeg.getInstance(context);
         try {
             // to execute "ffmpeg -version" command you just need to pass "-version"
