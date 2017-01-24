@@ -15,6 +15,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import jm.music.data.Note;
+import jm.music.data.Part;
+import jm.music.data.Phrase;
+import jm.music.data.Score;
+import jm.util.Write;
+
+import static jm.constants.Durations.MINIM;
+import static jm.constants.Pitches.C4;
+
 public class MainActivity extends AppCompatActivity {
     boolean isPlaying = false;
 
@@ -34,49 +43,24 @@ public class MainActivity extends AppCompatActivity {
         } else {
             isPlaying = true;
             playButton.setImageResource(R.drawable.ic_pause_white_24dp);
-            rawFilestoInternalStorage();
-            produceAndCreateMusic();
-            while(!(new File("/storage/emulated/0/music/song.wav").exists())) {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            //playMusic();
-            System.out.println(new File("/storage/emulated/0/music/song.wav").exists());
+            Note n = new Note(C4, MINIM);
+            Phrase phrase = new Phrase();
+            phrase.addNote(n);
+            Part part = new Part();
+            part.addPhrase(phrase);
+            Score score = new Score("Test");
+            score.addPart(part);
+            Write.midi(score, getFilesDir() + "/test.midi");
+            System.out.println(new File(getFilesDir() + "/test.midi").exists());
+            playMusic();
         }
-    }
-
-    public void rawFilestoInternalStorage() {
-        try {
-            InputStream input = this.getResources().openRawResource(R.raw.a5w);
-            File outputFile = new File(getFilesDir(), "a5w.wav");
-            OutputStream os = new FileOutputStream(outputFile);
-        } catch(FileNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void produceAndCreateMusic() {
-        com.goperez.neuraudio.Instrument piano_right = new com.goperez.neuraudio.Instrument("piano_right");
-        piano_right.setPath_to_notes(getFilesDir().getAbsolutePath());
-        piano_right.setBar("a5w");
-        Player p = new Player(this.getApplicationContext());
-        p.addInstrument(piano_right);
-
-        System.out.println(getFilesDir().getAbsolutePath());
-        System.out.println(p.produceMusic("/storage/emulated/0/Music/song.wav"));
-        File check = new File("/storage/emulated/0/Music/song.wav");
-        System.out.println(new File(getFilesDir() + "/a5w.wav").exists());
-        System.out.println(check.exists());
     }
 
     public void playMusic() {
         try {
             MediaPlayer player = new MediaPlayer();
             player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            player.setDataSource(getFilesDir().getAbsolutePath() + "/song.wav");
+            player.setDataSource(getFilesDir() + "/test.midi");
             player.prepare();
             player.start();
         } catch(IOException e) {
