@@ -1,5 +1,6 @@
 package com.goperez.neuraudio;
 
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -24,9 +25,11 @@ import jm.util.Write;
 
 import static jm.constants.Durations.MINIM;
 import static jm.constants.Pitches.C4;
+import static jm.constants.ProgramChanges.GUITAR;
+import static jm.constants.ProgramChanges.TRUMPET;
 
 public class MainActivity extends AppCompatActivity {
-    boolean isPlaying = false;
+    static boolean isPlaying = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,46 +47,8 @@ public class MainActivity extends AppCompatActivity {
         } else {
             isPlaying = true;
             playButton.setImageResource(R.drawable.ic_pause_white_24dp);
-            Note[] notes = new Note[10];
-            Note[] notes2 = new Note[10];
-            Random rand = new Random();
-
-            for(int i = 0; i < 10; i++) {
-                notes[i] = new Note(rand.nextInt(37) + 36, new Double(.25) + new Double(2.75) * rand.nextDouble());
-            }
-
-            for(int i = 0; i < 10; i++) {
-                notes2[i] = new Note(rand.nextInt(37) + 36, new Double(.25) + new Double(2.75) * rand.nextDouble());
-            }
-
-            Phrase phrase = new Phrase();
-            phrase.addNoteList(notes);
-            Phrase phrase2 = new Phrase();
-            phrase2.addNoteList(notes2);
-            Part part2 = new Part();
-            part2.addPhrase(phrase2);
-            Part part = new Part();
-            part.addPhrase(phrase);
-            Score score = new Score("Test");
-            score.addPart(part);
-            score.addPart(part2);
-            Write.midi(score, getFilesDir() + "/test.midi");
-            System.out.println(new File(getFilesDir() + "/test.midi").exists());
-            playMusic();
-
-
-        }
-    }
-
-    public void playMusic() {
-        try {
-            MediaPlayer player = new MediaPlayer();
-            player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            player.setDataSource(getFilesDir() + "/test.midi");
-            player.prepare();
-            player.start();
-        } catch(IOException e) {
-            e.printStackTrace();
+            Intent serviceIntent = new Intent(MainActivity.this, PlayService.class);
+            MainActivity.this.startService(serviceIntent);
         }
     }
 }
