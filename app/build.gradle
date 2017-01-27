@@ -36,4 +36,5 @@ dependencies {
     compile 'jp.kshoji:midi-driver:0.1.1:@aar'
     compile 'com.github.hiteshsondhi88.libffmpeg:FFmpegAndroid:0.2.5'
     compile 'com.explodingart:jmusic:1.6.4.1'
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
 }

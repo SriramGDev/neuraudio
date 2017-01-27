@@ -70,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
             Write.midi(score, getFilesDir() + "/test.midi");
             System.out.println(new File(getFilesDir() + "/test.midi").exists());
             playMusic();
+
+
         }
     }
 
