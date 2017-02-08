@@ -17,6 +17,7 @@
             </intent-filter>
         </activity>
         <service
+            android:process=":service"
             android:name=".PlayService"
             android:exported="false" />
     </application>

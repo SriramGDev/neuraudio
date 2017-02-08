@@ -25,7 +25,8 @@ import static jm.constants.ProgramChanges.TRUMPET;
  */
 
 public class PlayService extends IntentService {
-    MediaPlayer player;
+
+    static final MediaPlayer player = new MediaPlayer();
 
     public PlayService() {
         super("Play Service");
@@ -68,7 +69,6 @@ public class PlayService extends IntentService {
 
     public void playMusic() {
         try {
-            player = new MediaPlayer();
             player.setAudioStreamType(AudioManager.STREAM_MUSIC);
             player.setDataSource(getFilesDir() + "/test.midi");
             player.prepare();
@@ -76,9 +76,8 @@ public class PlayService extends IntentService {
             player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mediaPlayer) {
-                    player.reset();
-                    player.release();
-                    createMusic();
+                    System.out.println("Finished");
+                    MainActivity.restartService();
                 }
             });
         } catch(IOException e) {
@@ -86,11 +85,12 @@ public class PlayService extends IntentService {
         }
     }
 
+    /*
     @Override
     public void onDestroy() {
         player.stop();
         player.reset();
         player.release();
         player = null;
-    }
+    } */
 }

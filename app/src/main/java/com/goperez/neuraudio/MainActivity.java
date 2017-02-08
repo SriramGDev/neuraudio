@@ -1,5 +1,7 @@
 package com.goperez.neuraudio;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.media.AudioManager;
@@ -15,6 +17,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 
 import jm.music.data.Note;
@@ -44,11 +48,46 @@ public class MainActivity extends AppCompatActivity {
         if(isPlaying) {
             isPlaying = false;
             playButton.setImageResource(R.drawable.ic_play_arrow_white_48dp);
+            ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+            List<ActivityManager.RunningAppProcessInfo> runningAppProcesses = am.getRunningAppProcesses();
+
+            Iterator<ActivityManager.RunningAppProcessInfo> iter = runningAppProcesses.iterator();
+
+            while(iter.hasNext()){
+                ActivityManager.RunningAppProcessInfo next = iter.next();
+
+                String processName = getPackageName() + ":service";
+
+                if(next.processName.equals(processName)){
+                    android.os.Process.killProcess(next.pid);
+                    break;
+                }
+            }
         } else {
             isPlaying = true;
             playButton.setImageResource(R.drawable.ic_pause_white_24dp);
             Intent serviceIntent = new Intent(MainActivity.this, PlayService.class);
             MainActivity.this.startService(serviceIntent);
         }
+    }
+
+    public void restartService() {
+        ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> runningAppProcesses = am.getRunningAppProcesses();
+
+        Iterator<ActivityManager.RunningAppProcessInfo> iter = runningAppProcesses.iterator();
+
+        while(iter.hasNext()){
+            ActivityManager.RunningAppProcessInfo next = iter.next();
+
+            String processName = getPackageName() + ":service";
+
+            if(next.processName.equals(processName)){
+                android.os.Process.killProcess(next.pid);
+                break;
+            }
+        }
+        Intent serviceIntent = new Intent(MainActivity.this, PlayService.class);
+        startService(serviceIntent);
     }
 }
