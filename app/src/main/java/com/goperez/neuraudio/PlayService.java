@@ -27,6 +27,7 @@ import static jm.constants.ProgramChanges.TRUMPET;
 public class PlayService extends IntentService {
 
     static final MediaPlayer player = new MediaPlayer();
+    public static final String PARAM_OUT_MSG = "Done";
 
     public PlayService() {
         super("Play Service");
@@ -77,7 +78,11 @@ public class PlayService extends IntentService {
                 @Override
                 public void onCompletion(MediaPlayer mediaPlayer) {
                     System.out.println("Finished");
-                    MainActivity.restartService();
+                    Intent broadcastIntent = new Intent();
+                    broadcastIntent.setAction(ResponseReceiver.ACTION_RESP);
+                    broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
+                    broadcastIntent.putExtra(PARAM_OUT_MSG, "Finished");
+                    sendBroadcast(broadcastIntent);
                 }
             });
         } catch(IOException e) {
