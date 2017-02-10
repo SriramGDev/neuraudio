@@ -18,7 +18,9 @@ import jm.util.Play;
 import jm.util.Write;
 
 import static jm.constants.ProgramChanges.GUITAR;
+import static jm.constants.ProgramChanges.PIANO;
 import static jm.constants.ProgramChanges.TRUMPET;
+import static jm.constants.Scales.MAJOR_SCALE;
 
 /**
  * Created by sriram on 1/27/17.
@@ -41,28 +43,26 @@ public class PlayService extends IntentService {
 
     public void createMusic() {
         Note[] notes = new Note[10];
-        Note[] notes2 = new Note[10];
         Random rand = new Random();
-
-        for(int i = 0; i < 10; i++) {
-            notes[i] = new Note(rand.nextInt(37) + 36, new Double(.25) + new Double(2.75) * rand.nextDouble());
+        boolean scaleNote = false;
+        while(!scaleNote) {
+            notes[0] = new Note(rand.nextInt(37) + 36, new Double(.25) + new Double(2.75) * rand.nextDouble());
+            if(notes[0].isScale(MAJOR_SCALE)) {
+                scaleNote = true;
+            }
         }
 
         for(int i = 0; i < 10; i++) {
-            notes2[i] = new Note(rand.nextInt(37) + 36, new Double(.25) + new Double(2.75) * rand.nextDouble());
+            //notes[i] = new Note(rand.nextInt(37) + 36, new Double(.25) + new Double(2.75) * rand.nextDouble());
+            notes[i] = markovChain(notes[i-1]);
         }
 
         Phrase phrase = new Phrase();
         phrase.addNoteList(notes);
-        Phrase phrase2 = new Phrase();
-        phrase2.addNoteList(notes2);
-        Part trumpet = new Part("Trumpet", TRUMPET, 1);
-        trumpet.addPhrase(phrase2);
-        Part guitar = new Part("Guitar", GUITAR, 0);
+        Part guitar = new Part("Piano", PIANO, 0);
         guitar.addPhrase(phrase);
-        Score score = new Score("Test");
+        Score score = new Score("Piano");
         score.addPart(guitar);
-        score.addPart(trumpet);
         Write.midi(score, getFilesDir() + "/test.midi");
         System.out.println(new File(getFilesDir() + "/test.midi").exists());
         playMusic();
@@ -90,12 +90,23 @@ public class PlayService extends IntentService {
         }
     }
 
-    /*
-    @Override
-    public void onDestroy() {
-        player.stop();
-        player.reset();
-        player.release();
-        player = null;
-    } */
+    public Note markovChain(Note currentNote) {
+        float[][] transitionMatrix = new float[][] {
+
+            //    C    C#  D    D#      E       F     F#   G       G#   A   A#  B
+           /*C*/{.16f, 0, .2f, .08f, .0333f, .16337f, 0f, .13f, .2133f, 0, .1f, 0},
+          /*C#*/{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+           /*D*/{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+          /*D#*/{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+           /*E*/{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+           /*F*/{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+          /*F#*/{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+           /*G*/{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+          /*G#*/{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+           /*A*/{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+          /*A#*/{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+           /*B*/{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        };
+        return null;
+    }
 }
