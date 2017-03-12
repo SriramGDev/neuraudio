@@ -37,3 +37,15 @@ Like this:
     }
 ```
 This is one of our most vital functions as it creates musical phrases with instruments and initializes the markov chain.
+
+# TODO
+## Networking
+* Create neuron as interface
+* Implement interfaces for network
+* Calculate initial weights for network
+* Develop and implement algorithm for creation
+
+## Python
+* Pull Music21 Corpus pieces through API
+* Parse MusicXML files into midi
+* Analyze midi to calculate weights
